@@ -1,0 +1,165 @@
+using gold.**
+
+var  A  
+
+procedure main(args:String[]) begin
+	if  args.length=0  then  A:= {'a','b'}
+	else	
+		A := {args[0].charAt(i) |  0 ≤ i < args[0].length()}\{'&'}
+    end
+	GAutomataFrame.show(createFA())
+	test(createFA())
+end
+
+
+
+
+function createFA():ITransducer begin
+	Ls := A //alfabeto unicial
+	M0 := {""} //estado inicial
+	M1 := {""+a|a∈Ls} //estado secundario
+	M2 := {""+a+b| a∈Ls,b∈Ls} // terciario
+	M3 := {""+a+b+c|a∈Ls,b∈Ls,c∈Ls} //antefinal con tupla de completitud
+	Q := {⟨s⟩ | s ∈ M0 ∪ M1 ∪ M2 ∪ M3} 
+	∪ {⟨a, b, i⟩ | a ∈ M3 ∪ M0, b ∈ M3 ∪ M0, 0 ≤ i ≤ 3} 
+	∪ {⟨a, b, i, k⟩ | a ∈ M3∪ M0, b ∈ M3 ∪ M0,
+	0 ≤ i ≤ 3, k ∈ {'!', '*', '?', ""}} 
+	∪ {"E", "F"} //estados posibles
+	print Q
+	
+	Σ:= A ∪  {'&'} //alfabeto input
+	O := Σ  ∪  { '!', '*', '?'} //alfabeto output
+	q₀:=⟨""⟩ //estado inicial
+	F:={"F"}  //estado final
+	return GDeterministicTransducer(Q,Σ,O,q₀,F,δ,g,h)
+end
+
+g(x):= ""
+procedure test(M:ITransducer) begin
+	var sc:java.util.Scanner(System.$in)
+	
+		var string: String
+			
+			
+		repeat 
+		
+			print "----------------------------"
+			print "Input a string of the form xyz:W. with xyz and W  over "+A +"  (end with an empty string)"
+			string:=sc.nextLine()
+			if string ≠ λ then
+				result:=M.acceptsString(string)
+				print "The string was "+(result?"accepted":"not accepted")+". Output: "+M.getOutputString()		
+			end
+		until string=λ
+	print "Execution Terminated"
+end
+
+
+function reverse(s:String):String begin
+  var r:String 
+  var i:int 
+  
+  r := ""
+  i := s.length() - 1
+
+  while i >= 0 do
+    r := r + s.charAt(i)
+    i := i - 1
+  end
+
+  return r
+end
+
+
+function isPalindrome(cadena) begin
+  var left:int
+  var right:int
+  left := 0
+  right := cadena.length() - 1
+
+  while left < right do
+    if cadena.charAt(left) ≠ cadena.charAt(right) then
+      return false
+    end
+    left := left + 1
+    right := right - 1
+  end
+  return true
+end
+
+
+function δ(q, σ) begin
+  var actual:String
+  var anterior, p, out
+
+  if q = "E" or q = "F" then
+    return "E"
+
+  elseif σ = '&' then
+    if |q| = 1 then
+      actual := q[0]
+      return ⟨actual, "", 0⟩
+
+    elseif |q| = 3 then
+      anterior := q[0]
+      actual := q[1]
+      return ⟨actual, "", 0⟩ // actual pasa a ser el nuevo anterior
+
+    else
+      return "E"
+    end
+
+  elseif |q| = 1 then
+    s := q[0]
+    return ⟨s + σ⟩
+
+  elseif |q| = 2 then
+    anterior := q[0]
+    actual := q[1]
+
+    if actual.length() < 2 then
+      return ⟨anterior, actual + σ⟩
+    else
+      actual := actual + σ
+      if actual = anterior then
+        if isPalindrome(anterior) then
+          return ⟨anterior, actual, 3, "?"⟩
+        else
+          return ⟨anterior, actual, 3, "*"⟩
+        end
+      elseif actual = reverse(anterior) then
+        return ⟨anterior, actual, 3, "!"⟩
+      else
+        return ⟨anterior, actual, 3, actual⟩
+      end
+    end
+
+  elseif |q| = 4 then
+    if σ = '&' then
+      return ⟨q[1], "", 0⟩ 
+    else
+      return "E"
+    end
+
+  else
+    return "E"
+  end
+end
+
+
+
+function h(q, σ) begin
+  if |q| = 4 then
+    return q[3] 
+  else
+    return ""
+  end
+end
+
+
+
+
+
+
+
+ 
