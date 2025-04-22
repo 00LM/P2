@@ -3,7 +3,7 @@ using gold.**
 var  A  
 
 procedure main(args:String[]) begin
-	if  args.length=0  then  A:= {'a','b'}
+	if  args.length=0  then  A:= {'a'}
 	else	
 		A := {args[0].charAt(i) |  0 ≤ i < args[0].length()}\{'&'}
     end
@@ -20,9 +20,10 @@ function createFA():ITransducer begin
 	M1 := {""+a|a∈Ls} //estado secundario
 	M2 := {""+a+b| a∈Ls,b∈Ls} // terciario
 	M3 := {""+a+b+c|a∈Ls,b∈Ls,c∈Ls} //antefinal con tupla de completitud
+	
 	Q := {⟨s⟩ | s ∈ M0 ∪ M1 ∪ M2 ∪ M3} 
-	∪ {⟨a, b, i⟩ | a ∈ M3 ∪ M0, b ∈ M3 ∪ M0, 0 ≤ i ≤ 3} 
-	∪ {⟨a, b, i, k⟩ | a ∈ M3∪ M0, b ∈ M3 ∪ M0,
+	∪ {⟨a, b, i⟩ | a ∈ M3, b ∈ (M1∪M2∪M3), 0 ≤ i ≤ 3} //a es actual, b es siguiente, i es aciertos
+	∪ {⟨a, b, i, k⟩ | a ∈ M3, b ∈ (M1∪M2∪M3),
 	0 ≤ i ≤ 3, k ∈ {'!', '*', '?', ""}} 
 	∪ {"E", "F"} //estados posibles
 	print Q
@@ -89,54 +90,111 @@ end
 
 
 function δ(q, σ) begin
-  var actual:String
-  var anterior, p, out
+  var actualPalabra:String
+  var anteriorPalabra:String
+  var progreso:int
+  var salida:String
+  var s:String
+  var temp:String
+  var nuevaPalabra:String
 
   if q = "E" or q = "F" then
     return "E"
 
+  // ------------------ Si el símbolo es & -------------------
   elseif σ = '&' then
     if |q| = 1 then
-      actual := q[0]
-      return ⟨actual, "", 0⟩
+      actualPalabra := q[0]
+      temp := actualPalabra + ""
+      if actualPalabra ≠ "&" and temp.length() = 3 then
+        return ⟨actualPalabra, "", 0⟩
+      else
+        return "E"
+      end
 
     elseif |q| = 3 then
-      anterior := q[0]
-      actual := q[1]
-      return ⟨actual, "", 0⟩ // actual pasa a ser el nuevo anterior
+      anteriorPalabra := q[0]
+      actualPalabra := q[1]
+      progreso := q[2]
+      temp := actualPalabra + ""
+
+      if progreso < 3 then
+        return "E"
+      else
+        if temp.length() = 3 then
+          return ⟨actualPalabra, "", 0⟩
+        else
+          return "E"
+        end
+      end
+
+    elseif |q| = 4 then
+      anteriorPalabra := q[0]
+      actualPalabra := q[1]
+      progreso := q[2]
+      salida := q[3]
+      temp := actualPalabra + ""
+
+      if progreso = 3 and temp.length() = 3 then
+        return ⟨actualPalabra, "", 0⟩
+      else
+        return "E"
+      end
 
     else
       return "E"
     end
 
+  // ------------------ Para construir w1 -------------------
   elseif |q| = 1 then
     s := q[0]
-    return ⟨s + σ⟩
-
-  elseif |q| = 2 then
-    anterior := q[0]
-    actual := q[1]
-
-    if actual.length() < 2 then
-      return ⟨anterior, actual + σ⟩
+    if s.length() < 3 then
+      return ⟨s + σ⟩
     else
-      actual := actual + σ
-      if actual = anterior then
-        if isPalindrome(anterior) then
-          return ⟨anterior, actual, 3, "?"⟩
+      return "E"
+    end
+
+  // ------------------ Comparación  wi y wi-1 -------------------
+  elseif |q| = 3 then
+    anteriorPalabra := q[0]
+    actualPalabra := q[1]
+    progreso := q[2]
+    
+    if actualPalabra = "" and σ = '&' then
+	    return "E"
+	    end
+	
+	  if actualPalabra.length() < 2 then
+	    return ⟨anteriorPalabra, actualPalabra + σ, progreso + 1⟩
+    else
+      nuevaPalabra := actualPalabra + σ
+
+      if nuevaPalabra.length() ≠ 3 then
+        return "E"
+      end
+
+      if nuevaPalabra = anteriorPalabra then
+        if isPalindrome(anteriorPalabra) then
+          return ⟨anteriorPalabra, nuevaPalabra, 3, "?"⟩
         else
-          return ⟨anterior, actual, 3, "*"⟩
+          return ⟨anteriorPalabra, nuevaPalabra, 3, "*"⟩
         end
-      elseif actual = reverse(anterior) then
-        return ⟨anterior, actual, 3, "!"⟩
+      elseif nuevaPalabra = reverse(anteriorPalabra) then
+        return ⟨anteriorPalabra, nuevaPalabra, 3, "!"⟩
       else
-        return ⟨anterior, actual, 3, actual⟩
+        return ⟨anteriorPalabra, nuevaPalabra, 3, nuevaPalabra⟩
       end
     end
 
+  // ------------------ Estado con símbolo de salida  -------------------
   elseif |q| = 4 then
     if σ = '&' then
-      return ⟨q[1], "", 0⟩ 
+      temp := q[1] + ""
+      if temp.length() = 3 then
+        return ⟨q[1], "", 0⟩
+      else
+        return "E"
+      end
     else
       return "E"
     end
@@ -145,8 +203,6 @@ function δ(q, σ) begin
     return "E"
   end
 end
-
-
 
 function h(q, σ) begin
   if |q| = 4 then
