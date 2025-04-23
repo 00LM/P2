@@ -3,29 +3,32 @@ using gold.**
 var  A  
 
 procedure main(args:String[]) begin
-	if  args.length=0  then  A:= {'a'}
+	if  args.length=0  then  A:= {'a','b'}
 	else	
 		A := {args[0].charAt(i) |  0 ≤ i < args[0].length()}\{'&'}
     end
-	GAutomataFrame.show(createFA())
-	test(createFA())
+	//GAutomataFrame.show(createCoder())
+	//test(createFA())
+	coder := createCoder()
+	decoder := createCoder()
+	Utilities.testCodeDecode(coder,decoder)
+	
 end
 
 
 
 
-function createFA():ITransducer begin
+function createCoder():ITransducer begin
 	Ls := A //alfabeto unicial
 	M0 := {""} //estado inicial
 	M1 := {""+a|a∈Ls} //estado secundario
 	M2 := {""+a+b| a∈Ls,b∈Ls} // terciario
 	M3 := {""+a+b+c|a∈Ls,b∈Ls,c∈Ls} //antefinal con tupla de completitud
 	
-	Q := {⟨s⟩ | s ∈ M0 ∪ M1 ∪ M2 ∪ M3} 
-	∪ {⟨a, b, i⟩ | a ∈ M3, b ∈ (M1∪M2∪M3), 0 ≤ i ≤ 3} //a es actual, b es siguiente, i es aciertos
-	∪ {⟨a, b, i, k⟩ | a ∈ M3, b ∈ (M1∪M2∪M3),
-	0 ≤ i ≤ 3, k ∈ {'!', '*', '?', ""}} 
-	∪ {"E", "F"} //estados posibles
+	Q := 
+	{⟨s⟩ | s ∈ M0 ∪ M1 ∪ M2 ∪ M3} 
+	∪ {⟨a, b⟩ | a ∈ M3, b ∈ (M0∪M1∪M2∪M3)} //a es actual, b es siguiente
+	∪ {"E", "F", λ} //estados posibles
 	print Q
 	
 	Σ:= A ∪  {'&'} //alfabeto input
@@ -36,24 +39,6 @@ function createFA():ITransducer begin
 end
 
 g(x):= ""
-procedure test(M:ITransducer) begin
-	var sc:java.util.Scanner(System.$in)
-	
-		var string: String
-			
-			
-		repeat 
-		
-			print "----------------------------"
-			print "Input a string of the form xyz:W. with xyz and W  over "+A +"  (end with an empty string)"
-			string:=sc.nextLine()
-			if string ≠ λ then
-				result:=M.acceptsString(string)
-				print "The string was "+(result?"accepted":"not accepted")+". Output: "+M.getOutputString()		
-			end
-		until string=λ
-	print "Execution Terminated"
-end
 
 
 function reverse(s:String):String begin
@@ -89,129 +74,126 @@ function isPalindrome(cadena) begin
 end
 
 
-function δ(q, σ) begin
+function δ(q, σ) begin //sigma es lo leíso, q es el estado
   var actualPalabra:String
   var anteriorPalabra:String
   var progreso:int
   var salida:String
-  var s:String
   var temp:String
   var nuevaPalabra:String
 
   if q = "E" or q = "F" then
     return "E"
-
-  // ------------------ Si el símbolo es & -------------------
-  elseif σ = '&' then
-    if |q| = 1 then
-      actualPalabra := q[0]
-      temp := actualPalabra + ""
-      if actualPalabra ≠ "&" and temp.length() = 3 then
-        return ⟨actualPalabra, "", 0⟩
-      else
-        return "E"
-      end
-
-    elseif |q| = 3 then
-      anteriorPalabra := q[0]
-      actualPalabra := q[1]
-      progreso := q[2]
-      temp := actualPalabra + ""
-
-      if progreso < 3 then
-        return "E"
-      else
-        if temp.length() = 3 then
-          return ⟨actualPalabra, "", 0⟩
-        else
-          return "E"
-        end
-      end
-
-    elseif |q| = 4 then
-      anteriorPalabra := q[0]
-      actualPalabra := q[1]
-      progreso := q[2]
-      salida := q[3]
-      temp := actualPalabra + ""
-
-      if progreso = 3 and temp.length() = 3 then
-        return ⟨actualPalabra, "", 0⟩
-      else
-        return "E"
-      end
-
-    else
-      return "E"
-    end
-
+    
+  //(palabraactual, palabraleyendose, retorno)
+    
   // ------------------ Para construir w1 -------------------
   elseif |q| = 1 then
-    s := q[0]
-    if s.length() < 3 then
-      return ⟨s + σ⟩
-    else
-      return "E"
-    end
+      actualPalabra:= q[0]
+   	  if actualPalabra.length()  = 0  and  σ ≠ '&'then
+        return   	⟨""+σ⟩
+      elseif actualPalabra.length()  = 1  and σ ≠ '&' then
+        return   	⟨""+actualPalabra+σ⟩
+      elseif actualPalabra.length()  = 2 and σ ≠ '&' then
+        return   	⟨""+actualPalabra+σ⟩
+      elseif actualPalabra.length() = 3  and σ = '&' then
+   	      return   ⟨actualPalabra,""⟩
+   	   else 
+   	    	return "E"
+   	   end
 
-  // ------------------ Comparación  wi y wi-1 -------------------
-  elseif |q| = 3 then
-    anteriorPalabra := q[0]
-    actualPalabra := q[1]
-    progreso := q[2]
-    
-    if actualPalabra = "" and σ = '&' then
-	    return "E"
-	    end
-	
-	  if actualPalabra.length() < 2 then
-	    return ⟨anteriorPalabra, actualPalabra + σ, progreso + 1⟩
-    else
-      nuevaPalabra := actualPalabra + σ
+  // ------------------ Si la tupla tiene 2 cositos (anterior y siguiente) -------------------
+  elseif |q| = 2 then
+  	anteriorPalabra:= q[0]
+  	actualPalabra:= q[1]
+  	if actualPalabra.length() = 0  and  σ ≠ '&' then
+        return   	⟨anteriorPalabra,""+σ⟩
+      elseif actualPalabra.length()  = 1  and  σ≠ '&' then
+        return   	⟨anteriorPalabra,""+actualPalabra+σ⟩
+      elseif actualPalabra.length()  = 2 and σ ≠ '&' then
+        return   	⟨anteriorPalabra,""+actualPalabra+σ⟩
+      elseif actualPalabra.length() = 3  and σ = '&' then
+      	return 		⟨actualPalabra,""⟩
+      else 
+   	    	return "E"
+   	  end
+   else if (q==λ) then
+   	if σ ≠ '&' then
+   		return "F"
+   	else
+   		return "E"
+   	end
+   	end
+   end
+   end
 
-      if nuevaPalabra.length() ≠ 3 then
-        return "E"
-      end
-
-      if nuevaPalabra = anteriorPalabra then
-        if isPalindrome(anteriorPalabra) then
-          return ⟨anteriorPalabra, nuevaPalabra, 3, "?"⟩
-        else
-          return ⟨anteriorPalabra, nuevaPalabra, 3, "*"⟩
-        end
-      elseif nuevaPalabra = reverse(anteriorPalabra) then
-        return ⟨anteriorPalabra, nuevaPalabra, 3, "!"⟩
-      else
-        return ⟨anteriorPalabra, nuevaPalabra, 3, nuevaPalabra⟩
-      end
-    end
-
-  // ------------------ Estado con símbolo de salida  -------------------
-  elseif |q| = 4 then
-    if σ = '&' then
-      temp := q[1] + ""
-      if temp.length() = 3 then
-        return ⟨q[1], "", 0⟩
-      else
-        return "E"
-      end
-    else
-      return "E"
-    end
-
-  else
-    return "E"
-  end
-end
+   	   		
 
 function h(q, σ) begin
-  if |q| = 4 then
-    return q[3] 
-  else
-    return ""
-  end
-end
+	var actualPalabra:String
+  var anteriorPalabra:String
+  var progreso:int
+  var salida:String
+  var temp:String
+  var nuevaPalabra:String
 
+  if q = "E" or q = "F" then
+    return ""
+    
+  //(palabraactual, palabraleyendose, retorno)
+    
+  // ------------------ Para construir w1 -------------------
+  elseif |q| = 1 then
+      actualPalabra:= q[0]
+   	  if actualPalabra.length()  = 0  and  σ ≠ '&'then
+        return   	""+σ
+      elseif actualPalabra.length()  = 1  and σ ≠ '&' then
+        return   	""+σ
+      elseif actualPalabra.length()  = 2 and σ ≠ '&' then
+        return   	""+σ
+      elseif actualPalabra.length() = 3  and σ = '&' then
+   	      return   "&"
+   	   else 
+   	    	return ""
+   	   end
+
+  // ------------------ Si la tupla tiene 2 cositos (anterior y siguiente) -------------------
+  elseif |q| = 2 then
+  	anteriorPalabra:= q[0]
+  	actualPalabra:= q[1]
+  	if actualPalabra.length() = 0  and  σ ≠ '&' then
+        return   	""
+      elseif actualPalabra.length()  = 1  and  σ≠ '&' then
+        return   	""
+      elseif actualPalabra.length()  = 2 and σ ≠ '&' then
+        return   	""
+      elseif actualPalabra.length() = 3  and σ = '&' then
+      	return funcionRetorno(q,σ)
+      else 
+   	    	return ""
+   	  end
+   else
+   		return ""
+   end
+   end
+ 
+ function funcionRetorno(q,σ) begin
+ 	palabraAnterior := q[0]
+ 	palabraActual := q[1]
+ 	if palabraAnterior.length() = 3 and palabraActual.length() = 3 then
+		if palabraActual.equals(palabraAnterior) and isPalindrome(palabraAnterior) then
+  			return "?&"
+  		elseif palabraActual.equals(palabraAnterior) and (!isPalindrome(palabraAnterior)) then
+  			return "*&"
+  		elseif palabraActual.equals(reverse(palabraAnterior)) and (!isPalindrome(palabraAnterior)) then
+  			return "!&"
+  		else
+  			return palabraActual + "&"
+  		end
+  	else
+  		return ""
+  	end
+   end
 
 
 
