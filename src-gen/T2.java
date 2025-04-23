@@ -57,7 +57,7 @@ public final class T2 {
       $line=6;
       if ($opEqualY($invokeField("length",args),0)) {
         $line=6;
-        A=$fix(GCollections.asSet('a','b'));
+        A=$fix(GCollections.asSet('a','b','c'));
       }
       else {
         $line=8;
@@ -123,21 +123,33 @@ public final class T2 {
           $v13.add(GCollections.asList(a,b));
         }
       }
-      Object Q=$fix($opUnionY($opUnionY($v11,$v13),GCollections.asSet("E","F","")));
-      $line=32;
+      gold.structures.set.ISet $v15=$newSet();
+      $v16:for (Object a:GCollections.unmodifiableCollection(M3)) {
+        for (Object b:GCollections.unmodifiableCollection(M0)) {
+          $v15.add(GCollections.asList(a,b,"&"));
+        }
+      }
+      Object Q=$fix($opUnionY($opUnionY($opUnionY($v11,$v13),$v15),GCollections.asSet("E","F")));
+      $line=33;
       System.out.println($message(new Object[]{Q}));
-      $line=34;
-      Object \u03A3=$fix($opUnionY(A,GCollections.asSet('&')));
       $line=35;
-      Object O=$fix($opUnionY(\u03A3,GCollections.asSet('!','*','?')));
+      Object \u03A3=$fix($opUnionY(A,GCollections.asSet('&')));
       $line=36;
-      Object q_0=$fix(GCollections.asList(""));
+      Object O=$fix($opUnionY(\u03A3,GCollections.asSet('!','*','?')));
       $line=37;
-      Object F=$fix(GCollections.asSet("F"));
+      Object q_0=$fix(GCollections.asList(""));
       $line=38;
+      gold.structures.set.ISet $v17=$newSet();
+      $v18:for (Object a:GCollections.unmodifiableCollection(M3)) {
+        for (Object b:GCollections.unmodifiableCollection(M0)) {
+          $v17.add(GCollections.asList(a,b,"&"));
+        }
+      }
+      Object F=$fix($v17);
+      $line=39;
       $result=$invokeConstructor(GDeterministicTransducer.class,new Object[]{Q,\u03A3,O,q_0,F,new GMethod(T2.class,"\u03B4"),new GMethod(T2.class,"g"),new GMethod(T2.class,"h")});
       if (true) break $try;
-      $line=39;
+      $line=40;
       $rethrow(new RuntimeException("The function \"createCoder()\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -151,7 +163,7 @@ public final class T2 {
     $try:try {
       $result="";
       if (true) break $try;
-      $line=41;
+      $line=42;
       $rethrow(new RuntimeException("The function \"g(x:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -163,28 +175,28 @@ public final class T2 {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=45;
+      $line=46;
       String r=null;
       r=$defaultValue(String.class);
-      $line=46;
+      $line=47;
       Integer i=null;
       i=$defaultValue(Integer.class);
-      $line=48;
-      r=$cast(String.class,$fix(""));
       $line=49;
+      r=$cast(String.class,$fix(""));
+      $line=50;
       i=$cast(Integer.class,$fix($opSubtrY(((java.lang.String)s).length(),1)));
-      $line=51;
+      $line=52;
       while (true) {
         if (!($opGreaqY(i,0))) break;
-        $line=52;
-        r=$cast(String.class,$fix($opAdditY(r,((java.lang.String)s).charAt($int(i)))));
         $line=53;
+        r=$cast(String.class,$fix($opAdditY(r,((java.lang.String)s).charAt($int(i)))));
+        $line=54;
         i=$cast(Integer.class,$fix($opSubtrY(i,1)));
       }
-      $line=56;
+      $line=57;
       $result=r;
       if (true) break $try;
-      $line=57;
+      $line=58;
       $rethrow(new RuntimeException("The function \"reverse(s:String)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -196,34 +208,34 @@ public final class T2 {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=61;
+      $line=62;
       Integer left=null;
       left=$defaultValue(Integer.class);
-      $line=62;
+      $line=63;
       Integer right=null;
       right=$defaultValue(Integer.class);
-      $line=63;
-      left=$cast(Integer.class,$fix(0));
       $line=64;
+      left=$cast(Integer.class,$fix(0));
+      $line=65;
       right=$cast(Integer.class,$fix($opSubtrY($invokeMethod("length",cadena,new Object[]{}),1)));
-      $line=66;
+      $line=67;
       while (true) {
         if (!($opLesstY(left,right))) break;
-        $line=67;
+        $line=68;
         if (!$opEqualY($invokeMethod("charAt",cadena,new Object[]{left}),$invokeMethod("charAt",cadena,new Object[]{right}))) {
-          $line=68;
+          $line=69;
           $result=false;
           if (true) break $try;
         }
-        $line=70;
-        left=$cast(Integer.class,$fix($opAdditY(left,1)));
         $line=71;
+        left=$cast(Integer.class,$fix($opAdditY(left,1)));
+        $line=72;
         right=$cast(Integer.class,$fix($opSubtrY(right,1)));
       }
-      $line=73;
+      $line=74;
       $result=true;
       if (true) break $try;
-      $line=74;
+      $line=75;
       $rethrow(new RuntimeException("The function \"isPalindrome(cadena:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -235,64 +247,64 @@ public final class T2 {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=78;
+      $line=79;
       String actualPalabra=null;
       actualPalabra=$defaultValue(String.class);
-      $line=79;
+      $line=80;
       String anteriorPalabra=null;
       anteriorPalabra=$defaultValue(String.class);
-      $line=80;
+      $line=81;
       Integer progreso=null;
       progreso=$defaultValue(Integer.class);
-      $line=81;
+      $line=82;
       String salida=null;
       salida=$defaultValue(String.class);
-      $line=82;
+      $line=83;
       String temp=null;
       temp=$defaultValue(String.class);
-      $line=83;
+      $line=84;
       String nuevaPalabra=null;
       nuevaPalabra=$defaultValue(String.class);
-      $line=85;
+      $line=86;
       if (($opEqualY(q,"E")||$opEqualY(q,"F"))) {
-        $line=86;
+        $line=87;
         $result="E";
         if (true) break $try;
       }
       else {
-        $line=91;
+        $line=92;
         if ($opEqualY($opAbsolY(q),1)) {
-          $line=92;
-          actualPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{0})));
           $line=93;
+          actualPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{0})));
+          $line=94;
           if (($opEqualY(((java.lang.String)actualPalabra).length(),0)&&!$opEqualY(\u03C3,'&'))) {
-            $line=94;
+            $line=95;
             $result=GCollections.asList($opAdditY("",\u03C3));
             if (true) break $try;
           }
           else {
-            $line=95;
+            $line=96;
             if (($opEqualY(((java.lang.String)actualPalabra).length(),1)&&!$opEqualY(\u03C3,'&'))) {
-              $line=96;
+              $line=97;
               $result=GCollections.asList($opAdditY($opAdditY("",actualPalabra),\u03C3));
               if (true) break $try;
             }
             else {
-              $line=97;
+              $line=98;
               if (($opEqualY(((java.lang.String)actualPalabra).length(),2)&&!$opEqualY(\u03C3,'&'))) {
-                $line=98;
+                $line=99;
                 $result=GCollections.asList($opAdditY($opAdditY("",actualPalabra),\u03C3));
                 if (true) break $try;
               }
               else {
-                $line=99;
+                $line=100;
                 if (($opEqualY(((java.lang.String)actualPalabra).length(),3)&&$opEqualY(\u03C3,'&'))) {
-                  $line=100;
-                  $result=GCollections.asList(actualPalabra,"");
+                  $line=101;
+                  $result=GCollections.asList(actualPalabra,"","&");
                   if (true) break $try;
                 }
                 else {
-                  $line=102;
+                  $line=103;
                   $result="E";
                   if (true) break $try;
                 }
@@ -301,59 +313,55 @@ public final class T2 {
           }
         }
         else {
-          $line=106;
+          $line=107;
           if ($opEqualY($opAbsolY(q),2)) {
-            $line=107;
-            anteriorPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{0})));
             $line=108;
-            actualPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{1})));
+            anteriorPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{0})));
             $line=109;
-            if (($opEqualY(((java.lang.String)actualPalabra).length(),0)&&!$opEqualY(\u03C3,'&'))) {
-              $line=110;
-              $result=GCollections.asList(anteriorPalabra,$opAdditY("",\u03C3));
+            actualPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{1})));
+            $line=110;
+            if (($opEqualY(((java.lang.String)actualPalabra).length(),1)&&!$opEqualY(\u03C3,'&'))) {
+              $line=111;
+              $result=GCollections.asList(anteriorPalabra,$opAdditY($opAdditY("",actualPalabra),\u03C3));
               if (true) break $try;
             }
             else {
-              $line=111;
-              if (($opEqualY(((java.lang.String)actualPalabra).length(),1)&&!$opEqualY(\u03C3,'&'))) {
-                $line=112;
+              $line=112;
+              if (($opEqualY(((java.lang.String)actualPalabra).length(),2)&&!$opEqualY(\u03C3,'&'))) {
+                $line=113;
                 $result=GCollections.asList(anteriorPalabra,$opAdditY($opAdditY("",actualPalabra),\u03C3));
                 if (true) break $try;
               }
               else {
-                $line=113;
-                if (($opEqualY(((java.lang.String)actualPalabra).length(),2)&&!$opEqualY(\u03C3,'&'))) {
-                  $line=114;
-                  $result=GCollections.asList(anteriorPalabra,$opAdditY($opAdditY("",actualPalabra),\u03C3));
+                $line=114;
+                if (($opEqualY(((java.lang.String)actualPalabra).length(),3)&&$opEqualY(\u03C3,'&'))) {
+                  $line=115;
+                  $result=GCollections.asList(actualPalabra,"","&");
                   if (true) break $try;
                 }
                 else {
-                  $line=115;
-                  if (($opEqualY(((java.lang.String)actualPalabra).length(),3)&&$opEqualY(\u03C3,'&'))) {
-                    $line=116;
-                    $result=GCollections.asList(actualPalabra,"");
-                    if (true) break $try;
-                  }
-                  else {
-                    $line=118;
-                    $result="E";
-                    if (true) break $try;
-                  }
+                  $line=117;
+                  $result="E";
+                  if (true) break $try;
                 }
               }
             }
           }
           else {
-            $line=120;
-            if ($bool($opEqualY(q,""))) {
+            $line=119;
+            if ($opEqualY($opAbsolY(q),3)) {
+              $line=120;
+              anteriorPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{0})));
               $line=121;
-              if (!$opEqualY(\u03C3,'&')) {
-                $line=122;
-                $result="F";
+              actualPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{1})));
+              $line=122;
+              if ((($opEqualY(((java.lang.String)anteriorPalabra).length(),3)&&$opEqualY(((java.lang.String)actualPalabra).length(),0))&&!$opEqualY(\u03C3,'&'))) {
+                $line=123;
+                $result=GCollections.asList(anteriorPalabra,$opAdditY("",\u03C3));
                 if (true) break $try;
               }
               else {
-                $line=124;
+                $line=125;
                 $result="E";
                 if (true) break $try;
               }
@@ -361,7 +369,7 @@ public final class T2 {
           }
         }
       }
-      $line=128;
+      $line=129;
       $rethrow(new RuntimeException("The function \"\u03B4(q:Object,\u03C3:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -373,64 +381,64 @@ public final class T2 {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=133;
+      $line=134;
       String actualPalabra=null;
       actualPalabra=$defaultValue(String.class);
-      $line=134;
+      $line=135;
       String anteriorPalabra=null;
       anteriorPalabra=$defaultValue(String.class);
-      $line=135;
+      $line=136;
       Integer progreso=null;
       progreso=$defaultValue(Integer.class);
-      $line=136;
+      $line=137;
       String salida=null;
       salida=$defaultValue(String.class);
-      $line=137;
+      $line=138;
       String temp=null;
       temp=$defaultValue(String.class);
-      $line=138;
+      $line=139;
       String nuevaPalabra=null;
       nuevaPalabra=$defaultValue(String.class);
-      $line=140;
+      $line=141;
       if (($opEqualY(q,"E")||$opEqualY(q,"F"))) {
-        $line=141;
+        $line=142;
         $result="";
         if (true) break $try;
       }
       else {
-        $line=146;
+        $line=147;
         if ($opEqualY($opAbsolY(q),1)) {
-          $line=147;
-          actualPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{0})));
           $line=148;
+          actualPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{0})));
+          $line=149;
           if (($opEqualY(((java.lang.String)actualPalabra).length(),0)&&!$opEqualY(\u03C3,'&'))) {
-            $line=149;
+            $line=150;
             $result=$opAdditY("",\u03C3);
             if (true) break $try;
           }
           else {
-            $line=150;
+            $line=151;
             if (($opEqualY(((java.lang.String)actualPalabra).length(),1)&&!$opEqualY(\u03C3,'&'))) {
-              $line=151;
+              $line=152;
               $result=$opAdditY("",\u03C3);
               if (true) break $try;
             }
             else {
-              $line=152;
+              $line=153;
               if (($opEqualY(((java.lang.String)actualPalabra).length(),2)&&!$opEqualY(\u03C3,'&'))) {
-                $line=153;
+                $line=154;
                 $result=$opAdditY("",\u03C3);
                 if (true) break $try;
               }
               else {
-                $line=154;
+                $line=155;
                 if (($opEqualY(((java.lang.String)actualPalabra).length(),3)&&$opEqualY(\u03C3,'&'))) {
-                  $line=155;
+                  $line=156;
                   $result="&";
                   if (true) break $try;
                 }
                 else {
-                  $line=157;
+                  $line=158;
                   $result="";
                   if (true) break $try;
                 }
@@ -439,41 +447,41 @@ public final class T2 {
           }
         }
         else {
-          $line=161;
+          $line=162;
           if ($opEqualY($opAbsolY(q),2)) {
-            $line=162;
-            anteriorPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{0})));
             $line=163;
-            actualPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{1})));
+            anteriorPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{0})));
             $line=164;
+            actualPalabra=$cast(String.class,$fix($getArrayValue(q,new Object[]{1})));
+            $line=165;
             if (($opEqualY(((java.lang.String)actualPalabra).length(),0)&&!$opEqualY(\u03C3,'&'))) {
-              $line=165;
+              $line=166;
               $result="";
               if (true) break $try;
             }
             else {
-              $line=166;
+              $line=167;
               if (($opEqualY(((java.lang.String)actualPalabra).length(),1)&&!$opEqualY(\u03C3,'&'))) {
-                $line=167;
+                $line=168;
                 $result="";
                 if (true) break $try;
               }
               else {
-                $line=168;
+                $line=169;
                 if (($opEqualY(((java.lang.String)actualPalabra).length(),2)&&!$opEqualY(\u03C3,'&'))) {
-                  $line=169;
+                  $line=170;
                   $result="";
                   if (true) break $try;
                 }
                 else {
-                  $line=170;
+                  $line=171;
                   if (($opEqualY(((java.lang.String)actualPalabra).length(),3)&&$opEqualY(\u03C3,'&'))) {
-                    $line=171;
+                    $line=172;
                     $result=T2.funcionRetorno(q,\u03C3);
                     if (true) break $try;
                   }
                   else {
-                    $line=173;
+                    $line=174;
                     $result="";
                     if (true) break $try;
                   }
@@ -482,13 +490,13 @@ public final class T2 {
             }
           }
           else {
-            $line=176;
+            $line=177;
             $result="";
             if (true) break $try;
           }
         }
       }
-      $line=178;
+      $line=179;
       $rethrow(new RuntimeException("The function \"h(q:Object,\u03C3:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -500,34 +508,34 @@ public final class T2 {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=181;
-      Object palabraAnterior=$fix($getArrayValue(q,new Object[]{0}));
       $line=182;
-      Object palabraActual=$fix($getArrayValue(q,new Object[]{1}));
+      Object palabraAnterior=$fix($getArrayValue(q,new Object[]{0}));
       $line=183;
+      Object palabraActual=$fix($getArrayValue(q,new Object[]{1}));
+      $line=184;
       if (($opEqualY($invokeMethod("length",palabraAnterior,new Object[]{}),3)&&$opEqualY($invokeMethod("length",palabraActual,new Object[]{}),3))) {
-        $line=184;
+        $line=185;
         if (($bool($invokeMethod("equals",palabraActual,new Object[]{palabraAnterior}))&&$bool(T2.isPalindrome(palabraAnterior)))) {
-          $line=185;
+          $line=186;
           $result="?&";
           if (true) break $try;
         }
         else {
-          $line=186;
+          $line=187;
           if (($bool($invokeMethod("equals",palabraActual,new Object[]{palabraAnterior}))&&$bool(!$bool(T2.isPalindrome(palabraAnterior))))) {
-            $line=187;
+            $line=188;
             $result="*&";
             if (true) break $try;
           }
           else {
-            $line=188;
+            $line=189;
             if (($bool($invokeMethod("equals",palabraActual,new Object[]{T2.reverse($cast(java.lang.String.class,palabraAnterior))}))&&$bool(!$bool(T2.isPalindrome(palabraAnterior))))) {
-              $line=189;
+              $line=190;
               $result="!&";
               if (true) break $try;
             }
             else {
-              $line=191;
+              $line=192;
               $result=$opAdditY(palabraActual,"&");
               if (true) break $try;
             }
@@ -535,11 +543,11 @@ public final class T2 {
         }
       }
       else {
-        $line=194;
+        $line=195;
         $result="";
         if (true) break $try;
       }
-      $line=196;
+      $line=197;
       $rethrow(new RuntimeException("The function \"funcionRetorno(q:Object,\u03C3:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {

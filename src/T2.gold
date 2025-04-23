@@ -3,7 +3,7 @@ using gold.**
 var  A  
 
 procedure main(args:String[]) begin
-	if  args.length=0  then  A:= {'a','b'}
+	if  args.length=0  then  A:= {'a','b','c'}
 	else	
 		A := {args[0].charAt(i) |  0 ≤ i < args[0].length()}\{'&'}
     end
@@ -28,13 +28,14 @@ function createCoder():ITransducer begin
 	Q := 
 	{⟨s⟩ | s ∈ M0 ∪ M1 ∪ M2 ∪ M3} 
 	∪ {⟨a, b⟩ | a ∈ M3, b ∈ (M0∪M1∪M2∪M3)} //a es actual, b es siguiente
-	∪ {"E", "F", λ} //estados posibles
+	∪ {⟨a, b, "&"⟩ | a ∈ M3, b ∈ M0}
+	∪ {"E", "F"} //estados posibles
 	print Q
 	
 	Σ:= A ∪  {'&'} //alfabeto input
 	O := Σ  ∪  { '!', '*', '?'} //alfabeto output
 	q₀:=⟨""⟩ //estado inicial
-	F:={"F"}  //estado final
+	F:= {⟨a, b, "&"⟩ | a ∈ M3, b ∈ M0} //estado final
 	return GDeterministicTransducer(Q,Σ,O,q₀,F,δ,g,h)
 end
 
@@ -97,7 +98,7 @@ function δ(q, σ) begin //sigma es lo leíso, q es el estado
       elseif actualPalabra.length()  = 2 and σ ≠ '&' then
         return   	⟨""+actualPalabra+σ⟩
       elseif actualPalabra.length() = 3  and σ = '&' then
-   	      return   ⟨actualPalabra,""⟩
+   	      return   ⟨actualPalabra,"","&"⟩
    	   else 
    	    	return "E"
    	   end
@@ -106,23 +107,23 @@ function δ(q, σ) begin //sigma es lo leíso, q es el estado
   elseif |q| = 2 then
   	anteriorPalabra:= q[0]
   	actualPalabra:= q[1]
-  	if actualPalabra.length() = 0  and  σ ≠ '&' then
-        return   	⟨anteriorPalabra,""+σ⟩
-      elseif actualPalabra.length()  = 1  and  σ≠ '&' then
+     if actualPalabra.length()  = 1  and  σ≠ '&' then
         return   	⟨anteriorPalabra,""+actualPalabra+σ⟩
       elseif actualPalabra.length()  = 2 and σ ≠ '&' then
         return   	⟨anteriorPalabra,""+actualPalabra+σ⟩
-      elseif actualPalabra.length() = 3  and σ = '&' then
-      	return 		⟨actualPalabra,""⟩
+      elseif actualPalabra.length() = 3  and σ = '&' then //(aaa,aaa)
+      	return 		⟨actualPalabra,"","&"⟩
       else 
    	    	return "E"
    	  end
-   else if (q==λ) then
-   	if σ ≠ '&' then
-   		return "F"
+   else if |q| = 3 then
+   	anteriorPalabra:= q[0]
+  	actualPalabra:= q[1]
+   	if anteriorPalabra.length() = 3 and actualPalabra.length() = 0 and σ ≠ '&' then
+   		 return   	⟨anteriorPalabra,""+σ⟩
    	else
    		return "E"
-   	end
+   		end
    	end
    end
    end
